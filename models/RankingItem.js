@@ -14,19 +14,11 @@ const RankingItemSchema = mongoose.Schema({
     required: [true, 'pokemon required'], 
     maxLength: [1024, 'pokemon name is too long'] 
   },
-  opponent: { 
-    type: mongoose.Schema.Types.ObjectId,
-    required: true
-  },
-  opponentPokemon: { 
-    type: String, 
-    required: [true, 'opponent\'s pokemon required'], 
-    maxLength: [1024, 'pokemon name length is too long'] 
-  },
   scoredBy: { 
     type: mongoose.Schema.Types.ObjectId,
     ref: 'User',
-    required: true
+    required: true,
+    index: true
   },
   date: {
     type: Date,
@@ -39,7 +31,7 @@ const RankingItemSchema = mongoose.Schema({
 
 /**
  * Returns class list.
- *  - alias: 'alex'
+ *  - scoredBy: Example: 5bfd92e8ec9a1509496809455 (id_sport)
  *  - date: 
  * @param page
  * @param per_page

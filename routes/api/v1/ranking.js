@@ -11,12 +11,12 @@ const RankingItem = require('../../../models/RankingItem');
  * GET /
  * Find ranking.
  * Query params:
- *  - alias: Example: 5bfd92e8ec9a1509496809455 (id_sport)
+ *  - scoredBy: Example: 5bfd92e8ec9a1509496809455 (id_sport)
  *  - date: Example: today | week | month
  *  - sort: Example: '-date', '+score'
 **/
 router.get('/find', [
-  query('alias').optional().isString().withMessage('alias not valid'),
+  query('scoredBy').optional().isString().withMessage('user id not valid'),
   query('date').optional().isString().withMessage('date not valid'),
   query('sort').optional().isString().withMessage('sort not valid'),
   query('page').isInt({ min: 0 }).withMessage('page must be a number'),
@@ -55,8 +55,6 @@ router.get('/find', [
   check('scoredBy').isString().withMessage('scored by not valid'),
   check('score').isNumeric({min: 0, max: 10000}).withMessage('score not valid'),
   check('pokemon').isString().withMessage('pokemon not valid'),
-  check('opponent').isString().withMessage('opponent not valid'),
-  check('opponentPokemon').isString().withMessage('opponent pokemon not valid'),
 ], async (req, res, next) => {
   try {
     const data = req.body;

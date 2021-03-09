@@ -9,19 +9,15 @@ const User = require('../../../models/User');
 
 /**
  * GET /
- * Find ranking.
+ * Find user.
  * Query params:
  *  - alias: Example: 5bfd92e8ec9a1509496809455 (id_sport)
- *  - date: Example: today | week | month
- *  - sort: Example: '-date', '+score'
 **/
-router.get('/find', [
-  query('alias').isString().withMessage('alias not valid'),
-], async (req, res, next) => {
+router.get('/:alias', async (req, res, next) => {
   try {
     validationResult(req).throw();
 
-    const user = await User.findOne({ alias: req.query.alias }).exec();
+    const user = await User.findOne({ alias: req.params.alias?.trim()?.toLowerCase() }).exec();
     
     res.apiDataResponse( user );
   } catch (err) {
@@ -31,7 +27,7 @@ router.get('/find', [
 
 /**
  * POST /
- * Save a ranking item.
+ * Create a new user by its alias.
  * Query params:
  *  - alias
  **/
@@ -39,7 +35,9 @@ router.get('/find', [
   check('alias').isString().withMessage('alias not valid'),
 ], async (req, res, next) => {
   try {
-    const data = req.body;
+    const data = {
+      alias: req.body?.alias?.trim().toLowerCase()
+    };
 
     const newUser = new User(data);
     newUser.save((err, dataUser ) => {
