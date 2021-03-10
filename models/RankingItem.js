@@ -6,11 +6,12 @@ const {calculatePeriodDates} = require('../lib/dateInterval');
 const RankingItemSchema = mongoose.Schema({
   type: { type: String, default: 'ranking' },
   score: {
-    type: Number,
+    type: mongoose.Schema.Types.Number,
     required: [true, 'score required'],
+    index: true
   },
   pokemon: { 
-    type: String, 
+    type: mongoose.Schema.Types.String, 
     required: [true, 'pokemon required'], 
     maxLength: [1024, 'pokemon name is too long'] 
   },
@@ -21,7 +22,7 @@ const RankingItemSchema = mongoose.Schema({
     index: true
   },
   date: {
-    type: Date,
+    type: mongoose.Schema.Types.Date,
     default: Date.now,
     //required: true,
     index: true
@@ -38,6 +39,7 @@ const RankingItemSchema = mongoose.Schema({
  */
  RankingItemSchema.statics.list = async function (filters, page, per_page, sort) {
   let period;
+
   for (let key in filters) {
     if (!filters[key]) {
       delete filters[key];
@@ -52,22 +54,26 @@ const RankingItemSchema = mongoose.Schema({
   }
 
   delete filters.date;
-
+  
+  const queryCount = RankingItem.find(filters);
+  if (period?.length) {
+    queryCount.where({date: {$gt: period[0], $lt: period[1]}});
+  }
   const count = await RankingItem.find(filters).count();
+
   const query = RankingItem.find(filters);
 
   query.skip(page);
-  if (period && period.length) {
+  if (period?.length) {
     query.where({date: {$gt: period[0], $lt: period[1]}});
   }
+
   query.populate({path: 'scoredBy', select: ['_id', 'alias']})
-  query.populate({path: 'opponent', select: ['_id', 'alias']})
   query.limit(per_page);
 
   if (sort) {
     query.sort(sort);
   }
-  // query.select(fields);
 
   return { total: count, rows: await query.exec() };
 }

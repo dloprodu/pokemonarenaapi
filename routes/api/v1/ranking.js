@@ -26,13 +26,12 @@ router.get('/find', [
     validationResult(req).throw();
 
     const filter = {
-      alias: req.query.alias,
+      scoredBy: req.query.scoredBy,
       date: req.query.date,
     };
 
     const page = parseInt( req.query.page ) || 0;
     const per_page = parseInt( req.query.per_page ) || 10;
-
     const result = await RankingItem.list(filter, page, per_page, req.query.sort);
 
     res.apiPaginatedResponse( result.rows, result.total );
