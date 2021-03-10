@@ -3,8 +3,8 @@
   "version": "0.0.0",
   "private": true,
   "scripts": {
-    "start": "cross-env NODE_ENV=production nodemon ./www",
-    "cluster": "cross-env NODE_ENV=production node ./cluster",
+    "start": "cross-env NODE_ENV=production nodemon ./bin/www",
+    "cluster": "cross-env NODE_ENV=production node ./bin/cluster",
     "dev": "cross-env DEBUG=nodeapi:* nodemon ./www"
   },
   "dependencies": {
