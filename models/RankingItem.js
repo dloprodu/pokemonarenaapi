@@ -56,7 +56,7 @@ const RankingItemSchema = mongoose.Schema({
   delete filters.date;
   
   const queryCount = RankingItem.find(filters);
-  if (period?.length) {
+  if (period && period.length) {
     queryCount.where({date: {$gt: period[0], $lt: period[1]}});
   }
   const count = await RankingItem.find(filters).count();
@@ -64,7 +64,7 @@ const RankingItemSchema = mongoose.Schema({
   const query = RankingItem.find(filters);
 
   query.skip(page);
-  if (period?.length) {
+  if (period && period.length) {
     query.where({date: {$gt: period[0], $lt: period[1]}});
   }
 

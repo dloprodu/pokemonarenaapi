@@ -17,7 +17,12 @@ router.get('/:alias', async (req, res, next) => {
   try {
     validationResult(req).throw();
 
-    const user = await User.findOne({ alias: req.params.alias?.trim()?.toLowerCase() }).exec();
+    const filter = {};
+    if (req.params && req.params.alias) {
+      filter.alias = req.params.alias.trim().toLowerCase();
+    }
+
+    const user = await User.findOne(filter).exec();
     
     res.apiDataResponse( user );
   } catch (err) {
@@ -35,9 +40,11 @@ router.get('/:alias', async (req, res, next) => {
   check('alias').isString().withMessage('alias not valid'),
 ], async (req, res, next) => {
   try {
-    const data = {
-      alias: req.body?.alias?.trim().toLowerCase()
-    };
+    const data = {};
+
+    if (req.body && req.body.alias) {
+      data.alias = req.body.alias.trim().toLowerCase();
+    }
 
     const newUser = new User(data);
     newUser.save((err, dataUser ) => {
