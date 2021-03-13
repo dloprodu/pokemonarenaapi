@@ -6,7 +6,7 @@
 # https://github.com/MicrosoftDocs/pipelines-javascript
 
 trigger:
-- master
+- main
 
 pool:
   vmImage: 'Ubuntu 16.04'
